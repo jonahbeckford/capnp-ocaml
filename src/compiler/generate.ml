@@ -42,7 +42,7 @@ module Mode    = GenCommon.Mode
 
 
 let sig_s_header ~context = [
-  "[@@@ocaml.warning \"-27-32-37-60\"]";
+  "[@@@ocaml.warning \"-27-32-37-53-55-60\"]";
   "";
   "type ro = Capnp.Message.ro";
   "type rw = Capnp.Message.rw";

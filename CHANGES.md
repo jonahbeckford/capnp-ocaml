@@ -1,3 +1,7 @@
+# Pending
+
+* Suppress warnings 53 and 55 in generated code (@jonahbeckford, #86).
+
 # v3.5.0
 
 New features:
