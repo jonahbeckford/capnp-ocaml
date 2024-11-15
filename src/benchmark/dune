@@ -2,44 +2,64 @@
  (name main)
  (enabled_if (= %{architecture} amd64))
  (libraries capnp capnp_unix fast_rand base)
- (ocamlopt_flags :standard -O3 -inline 2000))
+ (ocamlopt_flags :standard (:include fastRand/foreign_stubs_flags.sexp) -inline 2000))
 
 (rule
- (targets carsales)
+ (enabled_if (= %{os_type} "Unix"))
+ (target ln.lines)
+ (action (with-stdout-to %{target} (echo "ln"))))
+
+(rule
+ (enabled_if (= %{os_type} "Win32"))
+ (target ln.lines)
+ (action (with-stdout-to %{target} (echo "cmd\n/c\ncopy"))))
+
+(rule
+ (targets carsales%{ext_exe})
  (enabled_if (= %{architecture} amd64))
  (deps main.exe)
  (action
-  (run ln main.exe %{targets})))
+  (run %{read-lines:ln.lines} main.exe %{targets})))
 
 (rule
- (targets catrank)
+ (targets catrank%{ext_exe})
  (enabled_if (= %{architecture} amd64))
  (deps main.exe)
  (action
-  (run ln main.exe %{targets})))
+  (run %{read-lines:ln.lines} main.exe %{targets})))
 
 (rule
- (targets eval)
+ (targets eval%{ext_exe})
  (enabled_if (= %{architecture} amd64))
  (deps main.exe)
  (action
-  (run ln main.exe %{targets})))
+  (run %{read-lines:ln.lines} main.exe %{targets})))
+
+(rule
+ (enabled_if (<> %{env:CAPNP_INCLUDE=} ""))
+ (target capnp_compile_args.lines)
+ (action (with-stdout-to %{target} (echo "-I\n%{env:CAPNP_INCLUDE=}\n"))))
+
+(rule
+ (enabled_if (= %{env:CAPNP_INCLUDE=} ""))
+ (target capnp_compile_args.lines)
+ (action (with-stdout-to %{target} (echo ""))))
 
 (rule
  (targets carsales.ml carsales.mli)
  (action
-  (run capnp compile -o %{bin:capnpc-ocaml} %{dep:carsales.capnp})))
+  (run capnp compile -o %{bin:capnpc-ocaml} %{read-lines:capnp_compile_args.lines} %{dep:carsales.capnp})))
 
 (rule
  (targets catrank.ml catrank.mli)
  (action
-  (run capnp compile -o %{bin:capnpc-ocaml} %{dep:catrank.capnp})))
+  (run capnp compile -o %{bin:capnpc-ocaml} %{read-lines:capnp_compile_args.lines} %{dep:catrank.capnp})))
 
 (rule
  (targets eval.ml eval.mli)
  (action
-  (run capnp compile -o %{bin:capnpc-ocaml} %{dep:eval.capnp})))
+  (run capnp compile -o %{bin:capnpc-ocaml} %{read-lines:capnp_compile_args.lines} %{dep:eval.capnp})))
 
 (alias
  (name benchmarks)
- (deps carsales catrank eval))
+ (deps carsales%{ext_exe} catrank%{ext_exe} eval%{ext_exe}))

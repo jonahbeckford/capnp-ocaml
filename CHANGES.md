@@ -1,3 +1,13 @@
+# PENDING
+
+Build system:
+
+- `CAPNP_INCLUDE` environment variable can be set if the build machine does
+  not have a standard location to store `capnp/*.capnp` schema file (ex.
+  `/usr/include` on Unix) (@jonahbeckford #92)
+- Windows compiler flags and commands are detected and used in benchmarks
+  (@jonahbeckford #92)
+
 # v3.6.0
 
 - Update README to talk about stdint, not uint (reported by @liyishuai).  

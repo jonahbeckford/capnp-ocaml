@@ -1,9 +1,19 @@
+(rule
+ (enabled_if (= %{os_type} "Unix"))
+ (target foreign_stubs_flags.sexp)
+ (action (with-stdout-to %{target} (echo "(-O3)"))))
+
+(rule
+ (enabled_if (= %{os_type} "Win32"))
+ (target foreign_stubs_flags.sexp)
+ (action (with-stdout-to %{target} (echo "(-O2)"))))
+
 (library
  (enabled_if (= %{architecture} amd64))
  (foreign_stubs
   (language c)
   (names fast_rand)
-  (flags :standard -O3))
+  (flags :standard (:include foreign_stubs_flags.sexp)))
  (name fast_rand)
  (wrapped false)
  (flags :standard -w -3))

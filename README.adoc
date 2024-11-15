@@ -563,11 +563,17 @@ capnp-ocaml requires OCaml >= 4.02.
 You should be able to install capnp-ocaml with
 http://opam.ocaml.org[OPAM] using using `opam install capnp`.
 
-If you prefer to compile manually, you will need jbuilder, Findlib, and OCaml
+If you prefer to compile manually, you will need Dune, Findlib, and OCaml
 packages `core_kernel`, `extunix`, `uint`, `ocplib-endian`, and `res`.
-Run `jbuilder build` to build both the compiler and the runtime library,
-and then use `jbuilder install` to copy them into appropriate places within your
+Run `dune build` to build both the compiler and the runtime library,
+and then use `opam install` or `dune install` to copy them into appropriate places within your
 filesystem.
+
+Compiling manually on Windows can be done if you create an opam 2.2 switch or DkML switch,
+and download and extract the [Cap’n Proto Win32 zip](https://capnproto.org/install.html#installation-windows).
+Use a PowerShell command like the following for development, replacing *YOU* with your username and
+*1.0.2* with the capnp version you downloaded:
+`opam exec -- env CAPNP_INCLUDE='C:\Users\YOU\Downloads\capnproto-c++-win32-1.0.2\capnproto-c++-1.0.2\src' sh -c "PATH=`"`$(cygpath 'C:\Users\YOU\Downloads\capnproto-c++-win32-1.0.2\capnproto-tools-win32-1.0.2'):`$PATH`" dune build"`
 
 Contact
 -------
