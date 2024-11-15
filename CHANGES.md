@@ -4,6 +4,8 @@ New features:
 
 - Expose module type `MESSAGE_STORAGE` which was used as a `Capnp.Message.Make`
   functor parameter but was previously hidden in `Capnp__MessageStorage.S`.
+  Expose module `ListStorageType` that was previously hidden in
+  `Capnp.MessageSig.ListStorageType`.
   Stop leaking `Uint32` and `Uint64` in module types. (@jonahbeckford #91)
 
 # v3.6.0
