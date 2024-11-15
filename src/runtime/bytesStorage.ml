@@ -29,9 +29,6 @@
 
 open EndianBytes
 
-module Uint32 = Stdint.Uint32
-module Uint64 = Stdint.Uint64
-
 type t = Bytes.t
 
 let alloc size = Bytes.make size '\x00'
@@ -41,16 +38,16 @@ let length = Bytes.length
 
 let get_uint8      = LittleEndian.get_uint8
 let get_uint16     = LittleEndian.get_uint16
-let get_uint32 s i = Uint32.of_int32 (LittleEndian.get_int32 s i)
-let get_uint64 s i = Uint64.of_int64 (LittleEndian.get_int64 s i)
+let get_uint32 s i = Stdint.Uint32.of_int32 (LittleEndian.get_int32 s i)
+let get_uint64 s i = Stdint.Uint64.of_int64 (LittleEndian.get_int64 s i)
 
 let get_int8  = LittleEndian.get_int8
 let get_int16 = LittleEndian.get_int16
 let get_int32 = LittleEndian.get_int32
 let get_int64 = LittleEndian.get_int64
 
-let set_uint32 s i v = LittleEndian.set_int32 s i (Uint32.to_int32 v)
-let set_uint64 s i v = LittleEndian.set_int64 s i (Uint64.to_int64 v)
+let set_uint32 s i v = LittleEndian.set_int32 s i (Stdint.Uint32.to_int32 v)
+let set_uint64 s i v = LittleEndian.set_int64 s i (Stdint.Uint64.to_int64 v)
 
 let set_int32 = LittleEndian.set_int32
 let set_int64 = LittleEndian.set_int64

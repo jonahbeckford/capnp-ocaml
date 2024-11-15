@@ -1,18 +1,15 @@
-module Uint32 = Stdint.Uint32
-module Uint64 = Stdint.Uint64
-
 module Registry : sig
   (** Handy central registry of all known interfaces, for logging. *)
 
   (** Used in the generated code to register the interfaces. *)
-  val register : interface_id:Uint64.t -> name:string -> (int -> string option) -> unit
+  val register : interface_id:Stdint.Uint64.t -> name:string -> (int -> string option) -> unit
 
   (** [pp_method] is a formatter for [(interface_id, method_id)] pairs.
       It prints out qualified names, suitable for logging
       (e.g. "Foo.bar") *)
-  val pp_method : Format.formatter -> Uint64.t * int -> unit
+  val pp_method : Format.formatter -> Stdint.Uint64.t * int -> unit
 
-  val pp_interface : Format.formatter -> Uint64.t -> unit
+  val pp_interface : Format.formatter -> Stdint.Uint64.t -> unit
 end = struct
   type interface = {
     name : string;
@@ -28,7 +25,7 @@ end = struct
     match Hashtbl.find interfaces interface_id with
     | exception Not_found ->
       Format.fprintf f "<interface %a>.<method-%d>"
-        Uint64.printer interface_id
+        Stdint.Uint64.printer interface_id
         method_id
     | interface ->
       match interface.method_lookup method_id with
@@ -39,7 +36,7 @@ end = struct
 
   let pp_interface f interface_id =
     match Hashtbl.find interfaces interface_id with
-    | exception Not_found -> Format.fprintf f "<interface %a>" Uint64.printer interface_id
+    | exception Not_found -> Format.fprintf f "<interface %a>" Stdint.Uint64.printer interface_id
     | interface           -> Format.fprintf f "%s" interface.name
 end
 
@@ -49,19 +46,19 @@ module MethodID : sig
       ['response]. *)
   type ('interface, 'request, 'response) t
 
-  val v : interface_id:Uint64.t -> method_id:int -> ('interface, 'req, 'resp) t
+  val v : interface_id:Stdint.Uint64.t -> method_id:int -> ('interface, 'req, 'resp) t
 
-  val interface_id : (_, _, _) t -> Uint64.t
+  val interface_id : (_, _, _) t -> Stdint.Uint64.t
 
   val method_id : (_, _, _) t -> int
 
   val pp : Format.formatter -> (_, _, _) t -> unit
 end = struct
-  type ('interface, 'request, 'response) t = Uint64.t * int
+  type ('interface, 'request, 'response) t = Stdint.Uint64.t * int
 
   let v ~interface_id ~method_id = (interface_id, method_id)
 
-  let interface_id : (_, _, _) t -> Uint64.t = fst
+  let interface_id : (_, _, _) t -> Stdint.Uint64.t = fst
   let method_id : (_, _, _) t -> int = snd
 
   let pp t = Registry.pp_method t
@@ -112,7 +109,7 @@ module type S = sig
     val capability_field : 'a StructRef.t -> int -> 'b Capability.t
 
     class type generic_service = object
-      method dispatch : interface_id:Uint64.t -> method_id:int -> abstract_method_t
+      method dispatch : interface_id:Stdint.Uint64.t -> method_id:int -> abstract_method_t
       (** Look up a method by ID. The schema compiler generates an implementation of this
           that dispatches to the typed methods of the interface. *)
 
@@ -130,19 +127,19 @@ module type S = sig
     val local : #generic_service -> 'a Capability.t
 
     (** Used in the generated code to get a capability from the attachments by index. *)
-    val get_cap : MessageSig.attachments -> Uint32.t -> 'a Capability.t
+    val get_cap : MessageSig.attachments -> Stdint.Uint32.t -> 'a Capability.t
 
     (** Used in the generated code to store a capability in the attachments. Returns the new index. *)
-    val add_cap : MessageSig.attachments -> 'a Capability.t -> Uint32.t
+    val add_cap : MessageSig.attachments -> 'a Capability.t -> Stdint.Uint32.t
 
     (** Remove a capability from the attachments. Used if the interface is changed. *)
-    val clear_cap : MessageSig.attachments -> Uint32.t -> unit
+    val clear_cap : MessageSig.attachments -> Stdint.Uint32.t -> unit
 
     (** Used to handle calls when the interface ID isn't known. *)
-    val unknown_interface : interface_id:Uint64.t -> abstract_method_t
+    val unknown_interface : interface_id:Stdint.Uint64.t -> abstract_method_t
 
     (** Used to handle calls when the method ID isn't known. *)
-    val unknown_method : interface_id:Uint64.t -> method_id:int -> abstract_method_t
+    val unknown_method : interface_id:Stdint.Uint64.t -> method_id:int -> abstract_method_t
   end
 end
 
@@ -170,7 +167,7 @@ module None (M : MessageSig.S) = struct
     let unknown_method ~interface_id:_ ~method_id:_ _req = failwith "Unknown method"
 
     class type generic_service = object
-      method dispatch : interface_id:Uint64.t -> method_id:int -> abstract_method_t
+      method dispatch : interface_id:Stdint.Uint64.t -> method_id:int -> abstract_method_t
       method release : unit
       method pp : Format.formatter -> unit
     end
@@ -181,7 +178,7 @@ module None (M : MessageSig.S) = struct
   end
 
   module Capability = struct
-    type 'a t = Uint32.t           (* Just the raw CapDescriptor table index. *)
+    type 'a t = Stdint.Uint32.t           (* Just the raw CapDescriptor table index. *)
   end
 
   module Service = struct

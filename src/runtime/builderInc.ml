@@ -34,9 +34,6 @@
    pointer will cause struct storage to be immediately allocated if that pointer
    was null). *)
 
-module Uint32 = Stdint.Uint32
-module Uint64 = Stdint.Uint64
-
 type ro = Message.ro
 type rw = Message.rw
 let invalid_msg = Message.invalid_msg
@@ -307,22 +304,22 @@ module Make (NM : RPC.S) = struct
       numeric lxor default
 
     let get_uint32
-        ~(default : Uint32.t)
+        ~(default : Stdint.Uint32.t)
         (struct_storage : (rw, _) NM.StructStorage.t)
         (byte_ofs : int)
-      : Uint32.t =
+      : Stdint.Uint32.t =
       let data = struct_storage.NM.StructStorage.data in
       let numeric = NM.Slice.get_uint32 data byte_ofs in
-      Uint32.logxor numeric default
+      Stdint.Uint32.logxor numeric default
 
     let get_uint64
-        ~(default : Uint64.t)
+        ~(default : Stdint.Uint64.t)
         (struct_storage : (rw, _) NM.StructStorage.t)
         (byte_ofs : int)
-      : Uint64.t =
+      : Stdint.Uint64.t =
       let data = struct_storage.NM.StructStorage.data in
       let numeric = NM.Slice.get_uint64 data byte_ofs in
-      Uint64.logxor numeric default
+      Stdint.Uint64.logxor numeric default
 
     let get_float32
         ~(default_bits : int32)
@@ -442,25 +439,25 @@ module Make (NM : RPC.S) = struct
 
     let set_uint32
         ?(discr : Discr.t option)
-        ~(default : Uint32.t)
+        ~(default : Stdint.Uint32.t)
         (struct_storage : (rw, _) NM.StructStorage.t)
         (byte_ofs : int)
-        (value : Uint32.t)
+        (value : Stdint.Uint32.t)
       : unit =
       let data = struct_storage.NM.StructStorage.data in
       let () = set_opt_discriminant data discr in
-      NM.Slice.set_uint32 data byte_ofs (Uint32.logxor value default)
+      NM.Slice.set_uint32 data byte_ofs (Stdint.Uint32.logxor value default)
 
     let set_uint64
         ?(discr : Discr.t option)
-        ~(default : Uint64.t)
+        ~(default : Stdint.Uint64.t)
         (struct_storage : (rw, _) NM.StructStorage.t)
         (byte_ofs : int)
-        (value : Uint64.t)
+        (value : Stdint.Uint64.t)
       : unit =
       let data = struct_storage.NM.StructStorage.data in
       let () = set_opt_discriminant data discr in
-      NM.Slice.set_uint64 data byte_ofs (Uint64.logxor value default)
+      NM.Slice.set_uint64 data byte_ofs (Stdint.Uint64.logxor value default)
 
     let set_float32
         ?(discr : Discr.t option)
@@ -666,7 +663,7 @@ module Make (NM : RPC.S) = struct
         ?(default : ro DM.ListStorage.t option)
         (struct_storage : (rw, _) NM.StructStorage.t)
         (pointer_word : int)
-      : (rw, Uint32.t, rw NM.ListStorage.t) InnerArray.t =
+      : (rw, Stdint.Uint32.t, rw NM.ListStorage.t) InnerArray.t =
       get_list ?default ~storage_type:ListStorageType.Bytes4
         ~codecs:uint32_list_codecs struct_storage pointer_word
 
@@ -674,7 +671,7 @@ module Make (NM : RPC.S) = struct
         ?(default : ro DM.ListStorage.t option)
         (struct_storage : (rw, _) NM.StructStorage.t)
         (pointer_word : int)
-      : (rw, Uint64.t, rw NM.ListStorage.t) InnerArray.t =
+      : (rw, Stdint.Uint64.t, rw NM.ListStorage.t) InnerArray.t =
       get_list ?default ~storage_type:ListStorageType.Bytes8
         ~codecs:uint64_list_codecs struct_storage pointer_word
 
@@ -976,8 +973,8 @@ module Make (NM : RPC.S) = struct
         ?(discr : Discr.t option)
         (struct_storage : (rw, _) NM.StructStorage.t)
         (pointer_word : int)
-        (value : ('cap1, Uint32.t, 'cap2 NM.ListStorage.t) InnerArray.t)
-      : (rw, Uint32.t, rw NM.ListStorage.t) InnerArray.t =
+        (value : ('cap1, Stdint.Uint32.t, 'cap2 NM.ListStorage.t) InnerArray.t)
+      : (rw, Stdint.Uint32.t, rw NM.ListStorage.t) InnerArray.t =
       set_list ?discr ~storage_type:ListStorageType.Bytes4 ~codecs:uint32_list_codecs
         struct_storage pointer_word value
 
@@ -985,8 +982,8 @@ module Make (NM : RPC.S) = struct
         ?(discr : Discr.t option)
         (struct_storage : (rw, _) NM.StructStorage.t)
         (pointer_word : int)
-        (value : ('cap1, Uint64.t, 'cap2 NM.ListStorage.t) InnerArray.t)
-      : (rw, Uint64.t, rw NM.ListStorage.t) InnerArray.t =
+        (value : ('cap1, Stdint.Uint64.t, 'cap2 NM.ListStorage.t) InnerArray.t)
+      : (rw, Stdint.Uint64.t, rw NM.ListStorage.t) InnerArray.t =
       set_list ?discr ~storage_type:ListStorageType.Bytes8 ~codecs:uint64_list_codecs
         struct_storage pointer_word value
 
@@ -1238,7 +1235,7 @@ module Make (NM : RPC.S) = struct
         (struct_storage : (rw, _) NM.StructStorage.t)
         (pointer_word : int)
         (num_elements : int)
-      : (rw, Uint32.t, rw NM.ListStorage.t) InnerArray.t =
+      : (rw, Stdint.Uint32.t, rw NM.ListStorage.t) InnerArray.t =
       init_list ?discr ~storage_type:ListStorageType.Bytes4 ~codecs:uint32_list_codecs
         struct_storage pointer_word num_elements
 
@@ -1247,7 +1244,7 @@ module Make (NM : RPC.S) = struct
         (struct_storage : (rw, _) NM.StructStorage.t)
         (pointer_word : int)
         (num_elements : int)
-      : (rw, Uint64.t, rw NM.ListStorage.t) InnerArray.t =
+      : (rw, Stdint.Uint64.t, rw NM.ListStorage.t) InnerArray.t =
       init_list ?discr ~storage_type:ListStorageType.Bytes8 ~codecs:uint64_list_codecs
         struct_storage pointer_word num_elements
 

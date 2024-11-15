@@ -101,7 +101,7 @@ module UncompStream = struct
           in
           let () =
             if segment_count > (max_int / 4) - 2 then
-              Util.out_of_int_range "Uint32.to_int"
+              Util.out_of_int_range "Stdint.Uint32.to_int"
           in
           let segment_count = segment_count + 1 in
           let frame_header_size =

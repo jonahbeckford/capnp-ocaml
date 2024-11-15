@@ -31,9 +31,6 @@
    here will modify the underlying message; derefencing null pointers and
    reading from truncated structs both lead to default data being returned. *)
 
-module Uint32 = Stdint.Uint32
-module Uint64 = Stdint.Uint64
-
 let sizeof_uint64 = 8
 
 open Message
@@ -298,32 +295,32 @@ module Make (MessageWrapper : RPC.S) = struct
         default
 
   let get_uint32
-      ~(default : Uint32.t)
+      ~(default : Stdint.Uint32.t)
       (struct_storage_opt : ('cap, _) StructStorage.t option)
       (byte_ofs : int)
-    : Uint32.t =
+    : Stdint.Uint32.t =
     match struct_storage_opt with
     | Some struct_storage ->
         let data = struct_storage.StructStorage.data in
         if byte_ofs + 3 < data.Slice.len then
           let numeric = Slice.get_uint32 data byte_ofs in
-          Uint32.logxor numeric default
+          Stdint.Uint32.logxor numeric default
         else
           default
     | None ->
         default
 
   let get_uint64
-      ~(default : Uint64.t)
+      ~(default : Stdint.Uint64.t)
       (struct_storage_opt : ('cap, _) StructStorage.t option)
       (byte_ofs : int)
-    : Uint64.t =
+    : Stdint.Uint64.t =
     match struct_storage_opt with
     | Some struct_storage ->
         let data = struct_storage.StructStorage.data in
         if byte_ofs + 7 < data.Slice.len then
           let numeric = Slice.get_uint64 data byte_ofs in
-          Uint64.logxor numeric default
+          Stdint.Uint64.logxor numeric default
         else
           default
     | None ->
@@ -557,14 +554,14 @@ module Make (MessageWrapper : RPC.S) = struct
       ?(default : ro ListStorage.t option)
       (struct_storage_opt : ('cap, _) StructStorage.t option)
       (pointer_word : int)
-    : (ro, Uint32.t, 'cap ListStorage.t) InnerArray.t =
+    : (ro, Stdint.Uint32.t, 'cap ListStorage.t) InnerArray.t =
     get_list ?default uint32_list_decoders struct_storage_opt pointer_word
 
   let get_uint64_list
       ?(default : ro ListStorage.t option)
       (struct_storage_opt : ('cap, _) StructStorage.t option)
       (pointer_word : int)
-    : (ro, Uint64.t, 'cap ListStorage.t) InnerArray.t =
+    : (ro, Stdint.Uint64.t, 'cap ListStorage.t) InnerArray.t =
     get_list ?default uint64_list_decoders struct_storage_opt pointer_word
 
   let get_float32_list

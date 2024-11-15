@@ -27,8 +27,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************)
 
-module Uint32 = Stdint.Uint32
-
 type ro = MessageSig.ro
 type rw = MessageSig.rw
 
@@ -410,7 +408,7 @@ module Make (Storage : MessageStorage.S) = struct
       | None
       | List of 'cap ListStorage.t
       | Struct of ('cap, 'a) StructStorage.t
-      | Capability of Uint32.t
+      | Capability of Stdint.Uint32.t
   end
 
 end [@@inline]

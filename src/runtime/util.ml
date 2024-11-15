@@ -27,9 +27,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************)
 
-module Uint32 = Stdint.Uint32
-module Uint64 = Stdint.Uint64
-
 exception Out_of_int_range of string
 let out_of_int_range s = raise (Out_of_int_range s)
 
@@ -61,7 +58,7 @@ let encode_signed n num =
 let ceil_ratio num denom = (num + denom - 1) / denom
 
 
-let uint64_equal a b : bool = Uint64.compare a b = 0
+let uint64_equal a b : bool = Stdint.Uint64.compare a b = 0
 
 
 let round_up_mult_8 (x : int) : int =
@@ -116,24 +113,24 @@ let int_of_int64_exn : int64 -> int =
      else
        Int64.to_int i64)
 
-let int_of_uint32_exn : Uint32.t -> int =
+let int_of_uint32_exn : Stdint.Uint32.t -> int =
   if Sys.word_size = 32 then
-    let max_val = Uint32.of_int max_int in
+    let max_val = Stdint.Uint32.of_int max_int in
     (fun u32 ->
-       if Uint32.compare u32 max_val > 0 then
+       if Stdint.Uint32.compare u32 max_val > 0 then
          out_of_int_range "UInt32"
        else
-         Uint32.to_int u32)
+         Stdint.Uint32.to_int u32)
   else
-    Uint32.to_int
+    Stdint.Uint32.to_int
 
-let int_of_uint64_exn : Uint64.t -> int =
-  let max_val = Uint64.of_int max_int in
+let int_of_uint64_exn : Stdint.Uint64.t -> int =
+  let max_val = Stdint.Uint64.of_int max_int in
   (fun u64 ->
-     if Uint64.compare u64 max_val > 0 then
+     if Stdint.Uint64.compare u64 max_val > 0 then
        out_of_int_range "UInt64"
      else
-       Uint64.to_int u64)
+       Stdint.Uint64.to_int u64)
 
 let int32_of_int_exn : int -> int32 =
   if Sys.word_size = 64 then
@@ -147,22 +144,22 @@ let int32_of_int_exn : int -> int32 =
   else
     Int32.of_int
 
-let uint32_of_int_exn : int -> Uint32.t =
+let uint32_of_int_exn : int -> Stdint.Uint32.t =
   if Sys.word_size = 64 then
-    let max_val = Uint32.to_int (Uint32.max_int) in
+    let max_val = Stdint.Uint32.to_int (Stdint.Uint32.max_int) in
     (fun i ->
        if i < 0 || i > max_val then
-         invalid_arg "Uint32.of_int"
+         invalid_arg "Stdint.Uint32.of_int"
        else
-         Uint32.of_int i)
+         Stdint.Uint32.of_int i)
   else
-    Uint32.of_int
+    Stdint.Uint32.of_int
 
 let uint64_of_int_exn i =
   if i < 0 then
-    invalid_arg "Uint64.of_int"
+    invalid_arg "Stdint.Uint64.of_int"
   else
-    Uint64.of_int i
+    Stdint.Uint64.of_int i
 
 
 let hex_table = [|

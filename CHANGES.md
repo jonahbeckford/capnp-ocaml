@@ -1,3 +1,11 @@
+# PENDING
+
+New features:
+
+- Expose module type `MESSAGE_STORAGE` which was used as a `Capnp.Message.Make`
+  functor parameter but was previously hidden in `Capnp__MessageStorage.S`.
+  Stop leaking `Uint32` and `Uint64` in module types. (@jonahbeckford #91)
+
 # v3.6.0
 
 - Update README to talk about stdint, not uint (reported by @liyishuai).  

@@ -27,9 +27,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************)
 
-module Uint32 = Stdint.Uint32
-module Uint64 = Stdint.Uint64
-
 type ro
 type rw
 
@@ -72,8 +69,8 @@ module type SEGMENT = sig
 
   val get_uint8  : 'cap t -> int -> int
   val get_uint16 : 'cap t -> int -> int
-  val get_uint32 : 'cap t -> int -> Uint32.t
-  val get_uint64 : 'cap t -> int -> Uint64.t
+  val get_uint32 : 'cap t -> int -> Stdint.Uint32.t
+  val get_uint64 : 'cap t -> int -> Stdint.Uint64.t
 
   (** [get_intXX s ofs] reads a signed integer of the specified width,
       starting at byte offset [ofs] within message segment [s]. *)
@@ -89,8 +86,8 @@ module type SEGMENT = sig
 
   val set_uint8  : rw t -> int -> int -> unit
   val set_uint16 : rw t -> int -> int -> unit
-  val set_uint32 : rw t -> int -> Uint32.t -> unit
-  val set_uint64 : rw t -> int -> Uint64.t -> unit
+  val set_uint32 : rw t -> int -> Stdint.Uint32.t -> unit
+  val set_uint64 : rw t -> int -> Stdint.Uint64.t -> unit
 
   (** [set_intXX s ofs val] writes the value of the width-restricted
       signed integer [val] into read/write-qualified message segment [s],
@@ -241,8 +238,8 @@ module type SLICE = sig
 
   val get_uint8  : 'cap t -> int -> int
   val get_uint16 : 'cap t -> int -> int
-  val get_uint32 : 'cap t -> int -> Uint32.t
-  val get_uint64 : 'cap t -> int -> Uint64.t
+  val get_uint32 : 'cap t -> int -> Stdint.Uint32.t
+  val get_uint64 : 'cap t -> int -> Stdint.Uint64.t
 
   (** [get_intXX s ofs] reads a signed integer of the specified width,
       starting at byte offset [ofs] within the [slice]. *)
@@ -258,8 +255,8 @@ module type SLICE = sig
 
   val set_uint8  : rw t -> int -> int -> unit
   val set_uint16 : rw t -> int -> int -> unit
-  val set_uint32 : rw t -> int -> Uint32.t -> unit
-  val set_uint64 : rw t -> int -> Uint64.t -> unit
+  val set_uint32 : rw t -> int -> Stdint.Uint32.t -> unit
+  val set_uint64 : rw t -> int -> Stdint.Uint64.t -> unit
 
   (** [set_intXX s ofs val] writes the value of the width-restricted
       signed integer [val] into the read/write-qualified [slice],
@@ -335,7 +332,7 @@ module type S = sig
       | None
       | List of 'cap ListStorage.t
       | Struct of ('cap, 'a) StructStorage.t
-      | Capability of Uint32.t
+      | Capability of Stdint.Uint32.t
   end
 end
 

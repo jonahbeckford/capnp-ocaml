@@ -27,6 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************)
 
+(** [MESSAGE_STORAGE] is the module type of underlying storage used for
+    message segments. *)
+module type MESSAGE_STORAGE = MessageStorage.S
+
 module MessageSig   = MessageSig
 module Message      = Message
 module Array        = CArray
